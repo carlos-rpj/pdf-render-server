@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  pdf:
+    image: puppeteer-server-render:latest
+    container_name: puppeteer-server-render
+    build: .
+    develop:
+      watch:
+        - action: sync+restart
+          path: .
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./package.json
+        - action: rebuild
+          path: ./Dockerfile
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/check" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
