@@ -23,3 +23,9 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 500M

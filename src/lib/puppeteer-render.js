@@ -1,23 +1,27 @@
 import puppeteer from 'puppeteer';
 
-export async function getPuppeteer() {
-  const browser = await puppeteer.launch({
-    executablePath: process.env.PUPEETEER_EXECUTABLE_PATH || undefined,
-    headless: 'new',
-    args: ['--no-sandbox'],
-  });
+const browser = await puppeteer.launch({
+  executablePath: process.env.PUPEETEER_EXECUTABLE_PATH || undefined,
+  headless: 'new',
+  args: ['--no-sandbox'],
+});
 
-  return await browser.newPage();
+for (const signal of ['SIGINT', 'SIGTERM']) {
+  process.on(signal, async () => {
+    console.log(`Closing browser on ${signal}`)
+    await browser.close();
+    process.exit(0);
+  });
 }
 
 export async function renderFromData(req, res) {
-  const page = await getPuppeteer();
+  const page = await browser.newPage();
   await page.setContent(req.query.data, { waitUntil: 'domcontentloaded' });
   sendFile(page, req, res);
 }
 
 export async function renderFromUrl(req, res) {
-  const page = await getPuppeteer();
+  const page = await browser.newPage();
   await page.goto(req.query.url, { waitUntil: 'domcontentloaded' });
   sendFile(page, req, res);
 }
@@ -32,8 +36,8 @@ async function sendFile(page, req, res) {
   const { options, filename, download } = req.query;
   const stream = await page.createPDFStream(JSON.parse(options));
 
-  stream.on('close', async () => {
-    await page.browser().close();
+  res.on('close', async () => {
+    await page.close();
   });
 
   const headers = {
@@ -46,5 +50,5 @@ async function sendFile(page, req, res) {
 
   res.status(200)
   res.header(headers);
-  stream.pipe(res, { end: true });
+  stream.pipe(res);
 }
