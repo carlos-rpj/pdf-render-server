@@ -1,7 +1,7 @@
 {
-  "name": "puppeteer-server-render",
+  "name": "@carlosrpj/pdf-server-render",
   "version": "1.0.0",
-  "description": "",
+  "description": "A server to render PDF files, using puppeteer",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
