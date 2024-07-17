@@ -1,4 +1,4 @@
-FROM node:20.10.0-alpine as chrome-image
+FROM node:20.10.0-alpine AS chrome-image
 
 ENV PUPEETEER_EXECUTABLE_PATH="/usr/bin/chromium-browser"
 RUN apk add --no-cache \
@@ -7,7 +7,8 @@ RUN apk add --no-cache \
   freetype \
   harfbuzz \
   ca-certificates \
-  ttf-freefont
+  ttf-freefont \
+  curl
 
 RUN rm -rf /usr/include \
   && rm -rf /var/cache/apk/* /root/.node-gyp /usr/share/man /tmp/*
@@ -19,7 +20,7 @@ RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
 
 USER pptruser
 
-FROM node:20.10.0-alpine as build-image
+FROM node:20.10.0-alpine AS build-image
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
