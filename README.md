@@ -3,6 +3,20 @@
 This is a docker container that renders a PDF file using a puppeteer instance.  
 <https://hub.docker.com/r/carlosrpj/puppeteer-server-render>
 
+## Execute container from dockerhub image
+
+Pull the container image from dockerhub:
+
+```bash
+docker pull carlosrpj/puppeteer-server-render
+```
+
+Run the container exposing port 3000:
+
+``` bash
+docker run --name puppeteer-server-render -p 3000:3000 -d carlosrpj/puppeteer-server-render
+```
+
 ## Instalation
 
 First, you will need the docker and docker compose installed.  

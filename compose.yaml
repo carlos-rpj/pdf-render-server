@@ -2,7 +2,7 @@ version: '3'
 
 services:
   pdf:
-    image: puppeteer-server-render:latest
+    image: carlosrpj/puppeteer-server-render:latest
     container_name: puppeteer-server-render
     build: .
     develop:
