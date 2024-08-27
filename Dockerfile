@@ -1,4 +1,4 @@
-FROM node:20.10.0-alpine AS chrome-image
+FROM node:20-alpine AS chrome-image
 
 ENV PUPEETEER_EXECUTABLE_PATH="/usr/bin/chromium-browser"
 RUN apk add --no-cache \
@@ -20,16 +20,15 @@ RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
 
 USER pptruser
 
-FROM node:20.10.0-alpine AS build-image
+FROM node:20-alpine AS build-image
 
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 WORKDIR /app
-COPY package.json pnpm-lock.yaml /app/
+COPY package.json pnpm-lock.yaml .npmrc /app/
 COPY src/ /app/src/
 
 RUN corepack enable
-RUN echo "node-linker=hoisted" > .npmrc
 RUN pnpm install --prod --frozen-lockfile
 
 FROM chrome-image

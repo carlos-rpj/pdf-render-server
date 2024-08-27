@@ -78,7 +78,7 @@ export class PDFRenderer {
    */
   async fromUrl(url, headers, options) {
     const page = await browser.newPage();
-    await page.setExtraHTTPHeaders(headers);
+    await page.setExtraHTTPHeaders(headers || {});
     await page.goto(url, { waitUntil: 'networkidle0' });
     return new PDFRendererResult(page, options);
   }
