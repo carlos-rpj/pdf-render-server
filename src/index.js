@@ -3,20 +3,17 @@ import express from 'express';
 
 import { cors } from './middlewares/cors.js';
 import { logRequest } from './middlewares/log-request.js';
-import { healthCheck } from './middlewares/health-check.js';
 import { parseOptions } from './middlewares/parse-options.js';
-import { renderPdfFromUrl, renderPdfStream } from './middlewares/render-pdf.js';
+import { apiRouter } from './routes/api.route.js';
 
 const port = process.env.PORT || 3000;
+const basePath = process.env.BASE_PATH || '/';
 const app = express();
 
 app.use(cors);
 app.use(parseOptions)
 app.use(logRequest);
-
-app.get('/check', healthCheck);
-app.get('/render', renderPdfFromUrl);
-app.post('/render', renderPdfStream);
+app.use(basePath, apiRouter);
 
 app.use(function(req, res, next) {
   res.status(404).json({
@@ -35,5 +32,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}/`);
+  console.log(`Server running at http://localhost:${port}${basePath}`);
 });
